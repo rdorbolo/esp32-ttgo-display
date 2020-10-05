@@ -1,0 +1,5 @@
+git config credential.helper store
+git push https://github.com/owner/repo.git
+
+git commit -a -m "message"
+
