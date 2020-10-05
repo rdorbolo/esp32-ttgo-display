@@ -1,3 +1,0 @@
-this is the contents of file1
-
-this is more stuff
