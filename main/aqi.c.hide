@@ -1,0 +1,76 @@
+
+#include "stdio.h"
+
+int pm25 = 600;
+
+unsigned calcAqi(unsigned pm25)
+{
+
+    int interval_y0;
+    int interval_y1;
+    int interval_x0;
+    int interval_x1;
+
+    if (pm25 <= 12)
+    {
+        interval_y0 = 0;
+        interval_y1 = 50;
+        interval_x0 = 0;
+        interval_x1 = 12;
+    }
+    else if (pm25 <= 35)
+    {
+        interval_y0 = 51;
+        interval_y1 = 100;
+        interval_x0 = 13;
+        interval_x1 = 35;
+    }
+    else if (pm25 <= 55)
+    {
+        interval_y0 = 101;
+        interval_y1 = 150;
+        interval_x0 = 35;
+        interval_x1 = 55;
+    }
+    else if (pm25 <= 150)
+    {
+        interval_y0 = 151;
+        interval_y1 = 200;
+        interval_x0 = 55;
+        interval_x1 = 150;
+    }
+    else if (pm25 <= 250)
+    {
+        interval_y0 = 201;
+        interval_y1 = 300;
+        interval_x0 = 150;
+        interval_x1 = 250;
+    }
+    else if (pm25 <= 350)
+    {
+        interval_y0 = 301;
+        interval_y1 = 400;
+        interval_x0 = 250;
+        interval_x1 = 350;
+    }
+    else if (pm25 <= 500)
+    {
+        interval_y0 = 401;
+        interval_y1 = 500;
+        interval_x0 = 350;
+        interval_x1 = 500;
+    }
+    else{
+        return pm25;
+    }
+    int retval = interval_y0 + ((pm25 - interval_x0) * (interval_y1 - interval_y0) / (interval_x1 - interval_x0));
+    return retval;
+}
+
+void main()
+{
+
+    printf("hello world\n");
+    printf("pm2.5 count is : %d\n", pm25);
+    printf("aqi is   : %d\n", calcAqi(pm25));
+}
