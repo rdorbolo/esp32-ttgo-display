@@ -153,7 +153,7 @@ void test1()
             snprintf(s, 30, "0.3 qty:  %d   ", airData.count_3);
             displayStr(s, x, y,0xf0, 0xf0, 0xf0);
 
-            fillBox(210, 15,  14, 14, 0, 0xff*(count%2), 0);        
+            fillBox(210, 15,  14, 14, 0, 0x0f0>>(count%4), 0);        
             }
             else
             {
@@ -185,7 +185,7 @@ void test1()
             }
             vTaskDelay(1000 / portTICK_PERIOD_MS);   
             count++;
-            fillBox(210, 15,  14, 14, 0, 0xff*(count%2), 0);        
+            fillBox(210, 15,  14, 14, 0, 0x0f0>>(count%4), 0);        
             vTaskDelay(1000 / portTICK_PERIOD_MS);
         }
     }

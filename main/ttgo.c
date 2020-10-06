@@ -121,8 +121,10 @@ void rdCmdWord16(unsigned b)
         clk(0);
     }
     dc_(1);
-    //  clk(1); //dummy read
+    //  clk(1); //dummy read needed by some commands
     //  clk(0);
+
+    // Read a bunch of bytes 
     rdData();
     rdData();
     rdData();
@@ -179,8 +181,9 @@ void wrData(int data)
 {
     //printf("write data=%x\n", data);
     gpio_set_direction(SDA_GPIO, GPIO_MODE_INPUT_OUTPUT);
-    cs_(0);
     dc_(1);
+    cs_(0);
+    
     int i;
     for (i = 0; i < 8; i++)
     {
@@ -267,9 +270,9 @@ void sendPx(uint8_t pxRed, uint8_t pxGreen, uint8_t pxBlue)
     if (pxCount >= 1)
     {
         pxCount = 0;
-        wrData2((previousPxRed << 4) | ((previousPxGreen & 0x0f0) >> 4));
-        wrData2((previousPxBlue << 4) | ((pxRed & 0x0f0) >> 4));
-        wrData2((pxGreen << 4) | ((pxBlue & 0x0f0) >> 4));
+        wrData2((previousPxRed  & 0xf0) | ((previousPxGreen & 0x0f0) >> 4));
+        wrData2((previousPxBlue & 0xf0) | ((pxRed & 0x0f0) >> 4));
+        wrData2((pxGreen        & 0xf0) | ((pxBlue & 0x0f0) >> 4));
     }
     else
     {
@@ -422,21 +425,27 @@ void initTTGO() {
 
     rst_(0);
     cs_(1);
-    dc_(0);
+    dc_(1);
     clk(0);
 
     
     rst_(1);
     
 
+
     //rdCmdByte(0xDA);
     //rdCmdByte(0xDB);
 
     // There is some type of bug in these two line
     // I think for the first write did not work
+    // wrByte is needed here
+    // wrCmmd/wrData seem to mess thing up
     wrByte(0x53, 0xff); // 
-    wrCmmd(0x53);
-    wrData(0xff);
+    //wrCmmd(0x53);
+    //wrData(0xff);
+
+    //wrCmmd(0x53);
+    //wrData(0xff);
 
     //rdCmdByte(0x54);
 
