@@ -1,0 +1,6 @@
+git config credential.helper store
+
+git add .
+git commit -a -m "message"
+git push 
+

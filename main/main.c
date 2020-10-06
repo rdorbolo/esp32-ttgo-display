@@ -676,8 +676,7 @@ rdCmdWord16(ST7789_RDDID);
             snprintf(s, 30, "0.3 qty:  %d   ", airData.count_3);
             displayStr(s, x, y,0xf0, 0xf0, 0xf0);
 
-            fillBox(200, 10,  10, 10, 0, 0xff*(count%2), 0);
-
+            fillBox(200, 15,  14, 14, 0, 0xff*(count%2), 0);        
             }
             else
             {
@@ -697,19 +696,19 @@ rdCmdWord16(ST7789_RDDID);
                 int x = 20;
                 int y = 20;
 
-                snprintf(s, 30, "Rick ");
+                snprintf(s, 30, "This ");
                 x = displayStr(s, x, y, 0xff,0xff,0xff);
                 y = y + 32;
-                snprintf(s, 30, "Loves ");
+                snprintf(s, 30, "is a ");
                 x = displayStr(s, x, y, 0xff,0xff,0xff);
                 y = y + 32;
-                snprintf(s, 30, "Haleh ");
+                snprintf(s, 30, "Test ");
                 x = displayStr(s, x, y, 0xff,0xff,0xff);
                 y = y + 32;
             }
             vTaskDelay(1000 / portTICK_PERIOD_MS);   
             count++;
-            fillBox(200, 10,  10, 10, 0, 0xff*(count%2), 0);        
+            fillBox(200, 15,  14, 14, 0, 0xff*(count%2), 0);        
             vTaskDelay(1000 / portTICK_PERIOD_MS);
         }
     }
