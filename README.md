@@ -1,5 +1,7 @@
 # Still in progress. do not use!
 
+
+How to get started: 
 1) Get ESP-IDF. 
 
 https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/index.html#step-2-get-esp-idf
