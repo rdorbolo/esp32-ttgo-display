@@ -439,7 +439,7 @@ void initTTGO() {
     // There is some type of bug in these two line
     // I think for the first write did not work
     // wrByte is needed here
-    // wrCmmd/wrData seem to mess thing up
+    // wrCmmd/wrData seem to mess things up
     wrByte(0x53, 0xff); // 
     //wrCmmd(0x53);
     //wrData(0xff);
@@ -450,30 +450,24 @@ void initTTGO() {
     //rdCmdByte(0x54);
 
     wrCmmd(ST7789_SLPOUT); // Sleep out
-    delay(120);
+    
 
     //wrCmmd(ST7789_NORON); // Normal display mode on
 
     //------------------------------display and color format setting--------------------------------//
-    wrCmmd(ST7789_MADCTL);
-    wrData(0x8);
+    //wrCmmd(ST7789_MADCTL);
+    //wrData(0x8);
 
-    // JLX240 display datasheet
-    //wrCmmd(0xB6);
-    //wrData(0x0A);
-    //wrData(0x82);
-
-    //wrCmmd(ST7789_COLMOD);
-    //wrData(0x55);
-    //delay(10);
-
+    
     //--------------------------------ST7789V Frame rate setting----------------------------------//
+    /*
     wrCmmd(ST7789_PORCTRL);
     wrData(0x0c);
     wrData(0x0c);
     wrData(0x00);
     wrData(0x33);
     wrData(0x33);
+    */
 
     wrCmmd(ST7789_GCTRL); // Voltages: VGH / VGL
     wrData(0x35);
@@ -500,9 +494,11 @@ void initTTGO() {
 
     wrCmmd(ST7789_PWCTRL1);
     wrData(0xa4);
-    wrData(0xa1);
+    //wrData(0xa1);
+    wrData(0x81);
 
     //--------------------------------ST7789V gamma setting---------------------------------------//
+   /*
     wrCmmd(ST7789_PVGAMCTRL);
     wrData(0xd0);
     wrData(0x00);
@@ -518,7 +514,8 @@ void initTTGO() {
     wrData(0x12);
     wrData(0x14);
     wrData(0x17);
-
+*/
+    // Set Gamma curve to G2.5
     wrCmmd(ST7789_GAMSET);
     wrData(0x04);
 
@@ -531,7 +528,6 @@ void initTTGO() {
     //begin_tft_write();
 
     wrCmmd(ST7789_DISPON); //Display on
-    delay(120);
 
     wrCmmd(ST7789_RAMCTRL);
     wrData(0x00);
@@ -539,6 +535,7 @@ void initTTGO() {
 
     //rdCmdWord16(0x0B);
 
+    // 12-bit color/pixel enabled
     wrCmmd(ST7789_COLMOD);
     wrData(0x03);
 
