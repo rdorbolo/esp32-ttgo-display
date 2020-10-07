@@ -1,4 +1,4 @@
-# Still in progress. do not use!
+# Still in progress. 
 
 
 How to get started: 
