@@ -9,11 +9,11 @@ See if you can run a basic example
 
 2) clone
 
-git clone https://github.com/rdorbolo/esp32-ttg0-display.git
+git clone https://github.com/rdorbolo/esp32-ttgo-display.git
 
 3) build
 
-cd esp32-ttg0-display
+cd esp32-ttgo-display
 
 idf.py build
 
