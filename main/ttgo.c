@@ -22,9 +22,17 @@ void dc_(int v) { gpio_set_level(DC_GPIO, v); }
 void clk(int v) { gpio_set_level(CLK_GPIO, v); }
 void sda(int v) { gpio_set_level(SDA_GPIO, v); }
 
+//The driver samples the SDA (input data) at rising edge of SCL,
+//but shifts SDA (output data) at the falling edge of SCL
+
+//After the read status command has been sent, the SDA line must be set to tri-state
+//no later than at the
+//falling edge of SCL of the last bit.
+
+
 
 /*
-Print out the gpio pin values
+Print out the gpio pin values used for debugging
 */
 void printValues(int header)
 {
@@ -292,11 +300,14 @@ unsigned printChar(unsigned char c, unsigned x, unsigned y, uint8_t pxRed, uint8
     w = (unsigned)widtbl_f32[c - (unsigned char)32];
     const unsigned char *font = chrtbl_f32[c - (unsigned char)32];
 
+
+    const unsigned x1 = 40 + x;
+    const unsigned x2 = 40 + x + w - 1;
     wrCmmd(ST7789_CASET); // Column address set - x axix
-    wrData(0x00);
-    wrData(40 + x);
-    wrData(0x00);
-    wrData(40 + x + w - 1);
+    wrData(x1>>8);
+    wrData(x1);
+    wrData(x2>>8);
+    wrData(x2);
 
     wrCmmd(ST7789_RASET); // Row address set
     wrData(0x00);
