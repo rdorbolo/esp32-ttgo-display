@@ -21,4 +21,4 @@ idf.py build
 
 idf.py -p (PORT) flash
 
-
+Based on the project https://github.com/Xinyuan-LilyGO/TTGO-T-Display
