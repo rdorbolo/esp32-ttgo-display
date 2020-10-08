@@ -291,14 +291,25 @@ void sendPx(uint8_t pxRed, uint8_t pxGreen, uint8_t pxBlue)
     }
 }
 
-unsigned printChar(unsigned char c, unsigned x, unsigned y, uint8_t pxRed, uint8_t pxGreen, uint8_t pxBlue)
+unsigned printChar(unsigned char c, unsigned x, unsigned y, uint8_t pxRed, uint8_t pxGreen, uint8_t pxBlue, uint8_t size)
 {
 
-    unsigned h = 26;
+    unsigned h;
     unsigned w;
+    const unsigned char *font;
+    
+    if (size==64) {
+         w = (unsigned)widtbl_f64[c - (unsigned char)32];
+        font = chrtbl_f64[c - (unsigned char)32];
+        h = 48;
+    }
+    else  {
+        w = (unsigned)widtbl_f32[c - (unsigned char)32];
+        font = chrtbl_f32[c - (unsigned char)32];
+        h = 26;
+    } 
+    if ( (size) != 64 && (size != 32) ) ESP_LOGE(TAG, "Fontsize must be either 32 or 64");
 
-    w = (unsigned)widtbl_f32[c - (unsigned char)32];
-    const unsigned char *font = chrtbl_f32[c - (unsigned char)32];
 
 
     const unsigned x1 = 40 + x;
@@ -402,7 +413,7 @@ void clearScreen(uint8_t pxRed, uint8_t pxGreen, uint8_t pxBlue)
 /*
 Draw string on display
 */
-unsigned displayStr(char *str, unsigned x, unsigned y, uint8_t pxRed, uint8_t pxGreen, uint8_t pxBlue)
+unsigned displayStr(char *str, unsigned x, unsigned y, uint8_t pxRed, uint8_t pxGreen, uint8_t pxBlue, uint8_t size)
 {
 
     unsigned len = strlen(str);
@@ -410,7 +421,7 @@ unsigned displayStr(char *str, unsigned x, unsigned y, uint8_t pxRed, uint8_t px
 
     for (i = 0; i < len; i++)
     {
-        x = x + printChar(str[i], x, y, pxRed, pxGreen, pxBlue);
+        x = x + printChar(str[i], x, y, pxRed, pxGreen, pxBlue, size);
     }
 
     return x;

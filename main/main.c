@@ -32,41 +32,47 @@ void demo1()
     vTaskDelay(50 / portTICK_PERIOD_MS);
 
     int count = 0;
+    unsigned x = 10;
+    unsigned y = 20;
+
+    vTaskDelay(50 / portTICK_PERIOD_MS);
+
+    snprintf(s, 30, "This ");
+    x = displayStr(s, x, y, 0xff, 0x00, 0x00, 32);
+
+    snprintf(s, 30, "is ");
+    x = displayStr(s, x, y, 0x00, 0x00, 0x00, 32);
+
+    snprintf(s, 30, "a ");
+    x = displayStr(s, x, y, 0xff, 0xff, 0x00, 32);
+
+    snprintf(s, 30, "Test ");
+    x = displayStr(s, x, y, 0xff, 0x00, 0xff, 32);
+
+    x = 10;
+    y = y + 32;
+    snprintf(s, 30, "Count:");
+    displayStr(s, x, y, 0xff, 0xff, 0xff, 32);
+
+    y = y + 32;
+    
+
+    int i;
+    for (i = 0; i < 8; i++)
+    {
+        fillBox(190+20*(i/4), 15 + 20 * i - 80*(i/4), 16, 16, 0, 0x0f0 - 0x20 * i, 0);
+    }
+
     while (1)
     {
-
-        unsigned x = 10;
-        unsigned y = 20;
-        count++;
+        snprintf(s, 30, "%d", count);
+        displayStr(s, x, y, 0xff, 0xff, 0xff, 64);
 
         vTaskDelay(50 / portTICK_PERIOD_MS);
-
-        snprintf(s, 30, "This ");
-        x = displayStr(s, x, y, 0xff, 0x00, 0x00);
-
-        snprintf(s, 30, "is ");
-        x = displayStr(s, x, y, 0x00, 0x00, 0x00);
-
-        snprintf(s, 30, "a ");
-        x = displayStr(s, x, y, 0xff, 0xff, 0x00);
-
-        snprintf(s, 30, "Test ");
-        x = displayStr(s, x, y, 0xff, 0x00, 0xff);
-
-        x = 10;
-        y = y + 32; 
-        snprintf(s,30, "Count: %d", count);
-        displayStr(s, x, y, 0xff, 0xff, 0xff);
-
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-
         count++;
-        fillBox(210, 15, 14, 14, 0, 0x0c0 >> (count % 2), 0);
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
+
     }
 }
-
-
 
 void app_main(void)
 {
