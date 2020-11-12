@@ -49,10 +49,23 @@ void demo1()
     snprintf(s, 30, "Test ");
     x = displayStr(s, x, y, 0xff, 0x00, 0xff, 32);
 
-    x = 10;
+    x = 0;
     y = y + 32;
-    snprintf(s, 30, "Count:");
-    displayStr(s, x, y, 0xff, 0xff, 0xff, 32);
+    //snprintf(s, 30, "Count:");
+    //displayStr(s, x, y, 0xff, 0xff, 0xff, 32);
+
+    uint8_t data[240];
+    uint64_t lastValue = 0;
+    uint64_t currentValue = 0;
+    uint headPtr = 0;
+    for (int i= 0; i<240; i++) {
+        
+        data[i] = 0; //(uint8_t) ( currentValue % (uint64_t)20 ) ;//  i%20;
+    }
+
+    
+    //fillBox(x, y, 10, 10, 0xff,0xff,0xff);
+    //fillBox(x, y+10, 10, 10, 0x00,0xff,0x00); 
 
     y = y + 32;
     
@@ -63,11 +76,18 @@ void demo1()
         fillBox(190+20*(i/4), 15 + 20 * i - 80*(i/4), 16, 16, 0, 0x0f0 - 0x20 * i, 0);
     }
 
+    fillBox(0, 47, 240, 29, 0x0,0x0,0x0);
+
     while (1)
     {
         snprintf(s, 30, "%d", count);
         displayStr(s, x, y, 0xff, 0xff, 0xff, 64);
-
+        lastValue = currentValue;
+        currentValue = lastValue + lastValue * 2161 + esp_timer_get_time() * 2267;
+        data[headPtr%240] = (uint8_t) ( currentValue % (uint64_t)20 );
+        fillBox2(0, 50, 240, 20, 0xff,0x80,0xff,data, headPtr);
+        headPtr = (headPtr + 1 ) %240;
+        
         vTaskDelay(50 / portTICK_PERIOD_MS);
         count++;
 

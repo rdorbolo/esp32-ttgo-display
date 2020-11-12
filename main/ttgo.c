@@ -5,6 +5,8 @@
 #include "driver/gpio.h"
 #include "fonts.h"
 #include "ttgo.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 
 static const char *TAG = "TTGO";
 
@@ -385,6 +387,48 @@ void fillBox(unsigned x, unsigned y, unsigned w, unsigned h, uint8_t pxRed, uint
     }
     cs_(1);
 }
+
+
+void fillBox2(unsigned x, unsigned y, unsigned w, unsigned h, uint8_t pxRed, uint8_t pxGreen, uint8_t pxBlue, uint8_t * data, uint headPtr)
+{
+    const unsigned y1 = 83 + y - h;
+    const unsigned y2 = 83 + y - 1;
+
+    const unsigned x1 = 40 + x;
+    const unsigned x2 = 40 + x + w - 1;
+
+
+    wrCmmd(ST7789_MADCTL); // Rotate the screen
+    wrData(0b00001000);    // rotation from default
+
+    wrCmmd(ST7789_CASET); // Column address set - y axix
+    wrData(y1>>8);
+    wrData(y1);
+    wrData(y2>>8);
+    wrData(y2);
+
+    wrCmmd(ST7789_RASET); // Row address set x
+    wrData(0x00);
+    wrData(x1);
+    wrData(x2>>8);
+    wrData(x2); 
+
+    wrCmmd(ST7789_RAMWR);
+    uint i;
+    for (i = 0; i < w*h; i++)
+    {
+        //vTaskDelay(10 / portTICK_PERIOD_MS);
+        //if (i<50) printf("data[%d] = %d\n", i, data[i]);
+        if (i%h == data[ (i/h + headPtr +1 )%w ]) sendPx(pxRed, pxGreen, pxBlue);
+        else sendPx(0, 0, 0);
+    }
+
+    wrCmmd(ST7789_MADCTL); // Rotate the screen
+    wrData(0b01101000);    // return to default
+    cs_(1);
+}
+
+
 
 
 void clearScreen(uint8_t pxRed, uint8_t pxGreen, uint8_t pxBlue)
