@@ -39,9 +39,9 @@ Print out the gpio pin values used for debugging
 void printValues(int header)
 {
     if (header)
-        printf("RST CS_ DC_ CLK SDA\n");
+        printf("DC_ SDA CLK RST CS_\n");
     else
-        printf("%d   %d   %d   %d   %d\n", gpio_get_level(RST_GPIO), gpio_get_level(CS_GPIO), gpio_get_level(DC_GPIO), gpio_get_level(CLK_GPIO), gpio_get_level(SDA_GPIO));
+        printf("%d   %d   %d   %d   %d\n", gpio_get_level(DC_GPIO), gpio_get_level(SDA_GPIO), gpio_get_level(CLK_GPIO), gpio_get_level(RST_GPIO), gpio_get_level(CS_GPIO));
 }
 
 
@@ -167,10 +167,10 @@ void rdCmdWord16(unsigned b)
 void wrCmmd(int cmd)
 {
     //printf("write cmd=%x\n", cmd);
-    //printValues(1);
+//   printValues(1);
     gpio_set_direction(SDA_GPIO, GPIO_MODE_INPUT_OUTPUT);
     cs_(0);
-    dc_(0);
+    dc_(1);
     int i;
     for (i = 0; i < 8; i++)
     {
@@ -178,14 +178,19 @@ void wrCmmd(int cmd)
         a = (a << i) & 0x0ff;
         a = a / 0x80;
         sda(a);
-        //printValues(0);
+        if (i==7) dc_(0);
+    //    printValues(0);
         clk(1);
-        //printValues(0);
+    //    printValues(0);
         clk(0);
     }
-    cs_(1);
-    //printValues(0);
+    dc_(1);
+    //cs_(1);
+//    printValues(0);
 }
+
+
+
 
 void wrData(int data)
 {
@@ -420,7 +425,7 @@ void fillBox2(unsigned x, unsigned y, unsigned w, unsigned h, uint8_t pxRed, uin
         //vTaskDelay(10 / portTICK_PERIOD_MS);
         //if (i<50) printf("data[%d] = %d\n", i, data[i]);
         if (i%h == data[ (i/h + headPtr +1 )%w ]) sendPx(pxRed, pxGreen, pxBlue);
-        else sendPx(0, 0, 0);
+        else sendPx(0x60, 0x60, 0x90);
     }
 
     wrCmmd(ST7789_MADCTL); // Rotate the screen
@@ -490,13 +495,33 @@ void initTTGO() {
     //printValues(0);
 
     rst_(0);
-    cs_(1);
-    dc_(1);
+    cs_(0);
+    //cs_(0);
+    dc_(0);
+    clk(1);
+
+    printValues(1);
+    printValues(0);
+
+    rst_(1);
+    printValues(0);
     clk(0);
 
-    
-    rst_(1);
-    
+    printValues(0);
+
+/*
+
+    int cnt = 0;
+    while (1) {
+        vTaskDelay(300 / portTICK_PERIOD_MS);
+        int val = cnt %2;
+        printf("dc_ val=%i\n", val); 
+        dc_(val);
+        cnt++;
+
+    }
+
+*/    
 
 
     //rdCmdByte(0xDA);
@@ -506,7 +531,7 @@ void initTTGO() {
     // I think for the first write did not work
     // wrByte is needed here
     // wrCmmd/wrData seem to mess things up
-    wrByte(0x53, 0xff); // 
+    //wrByte(0x53, 0xff); // 
     //wrCmmd(0x53);
     //wrData(0xff);
 
@@ -516,6 +541,10 @@ void initTTGO() {
     //rdCmdByte(0x54);
 
     wrCmmd(ST7789_SLPOUT); // Sleep out
+
+     wrCmmd(ST7789_DISPON); //Display on
+     wrCmmd(ST7789_DISPON); //Display on
+     //return;
     
 
     //wrCmmd(ST7789_NORON); // Normal display mode on
@@ -527,7 +556,7 @@ void initTTGO() {
     
     //--------------------------------ST7789V Frame rate setting----------------------------------//
     /*
-    wrCmmd(ST7789_PORCTRL);
+    wrCmmd(#define RST_GPIO 23_PORCTRL);
     wrData(0x0c);
     wrData(0x0c);
     wrData(0x00);
@@ -595,6 +624,10 @@ void initTTGO() {
 
     wrCmmd(ST7789_DISPON); //Display on
 
+    
+
+
+
     wrCmmd(ST7789_RAMCTRL);
     wrData(0x00);
     wrData(0xf0);
@@ -608,19 +641,17 @@ void initTTGO() {
     wrCmmd(ST7789_MADCTL); // Rotate the screen
     wrData(0b01101000);    // Rotate the screen
 
-    /*
-How to set ID
+ /*   
+//How to set ID
 wrCmmd(ST7789_IDSET);
 wrData(0x12);
 wrData(0x34);
 wrData(0x56);
-*/
-
-    /*
-How to read id, NOTE rdCmdWord16 need to add dummy clock cycle
+    
+//How to read id, NOTE rdCmdWord16 need to add dummy clock cycle
 rdCmdWord16(ST7789_RDDID);
-*/
 
+*/
     /* read from data ram. note need to read back in 18bit color... I think
   rdCmdWord16(ST7789_RAMRD);
   //wrCmmd(ST7789_RAMRD);

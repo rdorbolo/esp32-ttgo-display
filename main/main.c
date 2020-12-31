@@ -28,8 +28,11 @@ void demo1()
     bgRed = 0x40;
     bgGreen = 0x50;
     bgBlue = 0xd0;
-    clearScreen(bgRed, bgGreen, bgBlue);
-    vTaskDelay(50 / portTICK_PERIOD_MS);
+    //clearScreen(bgRed, bgGreen, bgBlue);
+    //vTaskDelay(50 / portTICK_PERIOD_MS);
+
+    //fillBox(0, 0, 40, 40, 0xff,0x0,0xff);
+    //fillBox(0, 0, 40, 40, 0xff,0x0,0xff);
 
     int count = 0;
     unsigned x = 10;
@@ -37,8 +40,22 @@ void demo1()
 
     vTaskDelay(50 / portTICK_PERIOD_MS);
 
+
+    
+     clearScreen(bgRed, bgGreen, bgBlue);
+
     snprintf(s, 30, "This ");
     x = displayStr(s, x, y, 0xff, 0x00, 0x00, 32);
+
+   
+    x=10;
+    x = displayStr(s, x, y, 0xff, 0x00, 0x00, 32);
+   
+
+    //snprintf(s, 30, "This ");
+    //x = displayStr(s, x, y, 0xff, 0x00, 0x00, 32);
+
+
 
     snprintf(s, 30, "is ");
     x = displayStr(s, x, y, 0x00, 0x00, 0x00, 32);
@@ -76,9 +93,10 @@ void demo1()
         fillBox(190+20*(i/4), 15 + 20 * i - 80*(i/4), 16, 16, 0, 0x0f0 - 0x20 * i, 0);
     }
 
-    fillBox(0, 47, 240, 29, 0x0,0x0,0x0);
+    //fillBox(0, 47, 240, 29, 0x0,0x0,0x0);
+    fillBox(0, 40, 40, 40, 0xff,0x0,0x0);
 
-    while (1)
+    while (0)
     {
         snprintf(s, 30, "%d", count);
         displayStr(s, x, y, 0xff, 0xff, 0xff, 64);

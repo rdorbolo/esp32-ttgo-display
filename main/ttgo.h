@@ -1,7 +1,8 @@
 #pragma once
 
-// Backlight 
-#define BL_GPIO  4 
+#define ttgo
+
+#ifdef ttgo_no
 
 //in / out data
 #define SDA_GPIO 19  
@@ -9,10 +10,27 @@
 #define CLK_GPIO 18
 //data / command_
 #define DC_GPIO  16
+#define RST_GPIO 23
+
+#else
+
+#define SDA_GPIO 2  
+//serial clock
+//#define CLK_GPIO 12
+#define CLK_GPIO 22
+//data / command_
+#define DC_GPIO  21
+#define RST_GPIO 17
+
+#endif
+
+// Backlight 
+#define BL_GPIO  4 
+
 //chipSelect_
 #define CS_GPIO  5
 
-#define RST_GPIO 23
+
 
 
 // ST7789 specific commands used in init
