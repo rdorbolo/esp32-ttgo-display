@@ -2,7 +2,7 @@
 
 #define ttgo
 
-#ifdef ttgo_no
+#ifdef ttgo
 
 //in / out data
 #define SDA_GPIO 19  
@@ -11,6 +11,12 @@
 //data / command_
 #define DC_GPIO  16
 #define RST_GPIO 23
+#define STARTX 40
+#define STARTY 53
+#define WIDTHX 240   
+#define HEIGHTY 135
+// Required for rotation in fillbox2
+#define HEIGHTYR 187
 
 #else
 
@@ -21,8 +27,18 @@
 //data / command_
 #define DC_GPIO  21
 #define RST_GPIO 17
+#define STARTX 0
+#define STARTY 0
+#define WIDTHX 240
+#define HEIGHTY 240
+// Required for rotation in fillbox2
+#define HEIGHTYR 240
 
 #endif
+
+// Required for rotation in fillbox2
+
+
 
 // Backlight 
 #define BL_GPIO  4 

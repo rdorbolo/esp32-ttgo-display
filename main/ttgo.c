@@ -11,6 +11,9 @@
 static const char *TAG = "TTGO";
 
 uint8_t bgRed, bgGreen,  bgBlue;
+uint8_t fillboxBgRed, fillboxBgGreen, fillboxBgBlue;
+
+
 
 uint8_t previousPxRed;
 uint8_t previousPxGreen;
@@ -319,8 +322,8 @@ unsigned printChar(unsigned char c, unsigned x, unsigned y, uint8_t pxRed, uint8
 
 
 
-    const unsigned x1 = 40 + x;
-    const unsigned x2 = 40 + x + w - 1;
+    const unsigned x1 = STARTX + x;
+    const unsigned x2 = STARTX + x + w - 1;
     wrCmmd(ST7789_CASET); // Column address set - x axix
     wrData(x1>>8);
     wrData(x1);
@@ -329,9 +332,9 @@ unsigned printChar(unsigned char c, unsigned x, unsigned y, uint8_t pxRed, uint8
 
     wrCmmd(ST7789_RASET); // Row address set
     wrData(0x00);
-    wrData(53 + y);
+    wrData(STARTY + y);
     wrData(0x00);
-    wrData(53 + y + h - 1); 
+    wrData(STARTY + y + h - 1); 
 
     wrCmmd(ST7789_RAMWR);
 
@@ -370,8 +373,8 @@ unsigned printChar(unsigned char c, unsigned x, unsigned y, uint8_t pxRed, uint8
 
 void fillBox(unsigned x, unsigned y, unsigned w, unsigned h, uint8_t pxRed, uint8_t pxGreen, uint8_t pxBlue)
 {
-    const unsigned x1 = 40 + x;
-    const unsigned x2 = 40 + x + w - 1;
+    const unsigned x1 = STARTX + x;
+    const unsigned x2 = STARTX + x + w - 1;
     wrCmmd(ST7789_CASET); // Column address set - x axix
     wrData(x1>>8);
     wrData(x1);
@@ -380,9 +383,9 @@ void fillBox(unsigned x, unsigned y, unsigned w, unsigned h, uint8_t pxRed, uint
 
     wrCmmd(ST7789_RASET); // Row address set
     wrData(0x00);
-    wrData(53 + y);
+    wrData(STARTY + y);
     wrData(0x00);
-    wrData(53 + y + h - 1); 
+    wrData(STARTY + y + h - 1); 
 
     wrCmmd(ST7789_RAMWR);
     int i;
@@ -396,11 +399,14 @@ void fillBox(unsigned x, unsigned y, unsigned w, unsigned h, uint8_t pxRed, uint
 
 void fillBox2(unsigned x, unsigned y, unsigned w, unsigned h, uint8_t pxRed, uint8_t pxGreen, uint8_t pxBlue, uint8_t * data, uint headPtr)
 {
-    const unsigned y1 = 83 + y - h;
-    const unsigned y2 = 83 + y - 1;
+    //const unsigned y1 = /*83 + */y - h;
+    //const unsigned y2 = /*83 + */y - 1;
 
-    const unsigned x1 = 40 + x;
-    const unsigned x2 = 40 + x + w - 1;
+    const unsigned y1 = HEIGHTYR - y - h ;
+    const unsigned y2 = HEIGHTYR - y - 1;
+
+    const unsigned x1 = STARTX + x;
+    const unsigned x2 = STARTX + x + w - 1;
 
 
     wrCmmd(ST7789_MADCTL); // Rotate the screen
@@ -425,7 +431,7 @@ void fillBox2(unsigned x, unsigned y, unsigned w, unsigned h, uint8_t pxRed, uin
         //vTaskDelay(10 / portTICK_PERIOD_MS);
         //if (i<50) printf("data[%d] = %d\n", i, data[i]);
         if (i%h == data[ (i/h + headPtr +1 )%w ]) sendPx(pxRed, pxGreen, pxBlue);
-        else sendPx(0x60, 0x60, 0x90);
+        else sendPx(fillboxBgRed, fillboxBgGreen, fillboxBgBlue);
     }
 
     wrCmmd(ST7789_MADCTL); // Rotate the screen
@@ -438,21 +444,27 @@ void fillBox2(unsigned x, unsigned y, unsigned w, unsigned h, uint8_t pxRed, uin
 
 void clearScreen(uint8_t pxRed, uint8_t pxGreen, uint8_t pxBlue)
 {
-    wrCmmd(ST7789_CASET); // Column address set - Y axis
+    wrCmmd(ST7789_CASET); // Column address set - X axis (in landscape mode TTGO 240 x 135)
+    unsigned int startX, lastX, startY, lastY;
+    startX = STARTX;
+    lastX = startX + WIDTHX - 1;
+    startY = STARTY;
+    lastY = startY + HEIGHTY -1 ;
+
     wrData(0x00);
-    wrData(40); // First Column is 40
-    wrData(0x01);
-    wrData(23); //  Last Colum is 40 + 239
+    wrData(startX); // First Column is 40
+    wrData(lastX>>8);
+    wrData(lastX&0x0ff); //  Last Colum is 40 + 239
 
     wrCmmd(ST7789_RASET); // Row address set
     wrData(0x00);
-    wrData(53);
+    wrData(startY);
     wrData(0x00);
-    wrData(256);
+    wrData(lastY);
 
     wrCmmd(ST7789_RAMWR);
     int i;
-    for (i = 0; i < 135 * 240; i++)
+    for (i = 0; i < WIDTHX * HEIGHTY; i++)
     {
         sendPx(pxRed, pxGreen, pxBlue);
     }
@@ -522,7 +534,7 @@ void initTTGO() {
     }
 
 */    
-
+  
 
     //rdCmdByte(0xDA);
     //rdCmdByte(0xDB);

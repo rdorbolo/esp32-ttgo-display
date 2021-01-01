@@ -19,14 +19,16 @@
 #include "ttgo.h"
 
 extern uint8_t bgRed, bgGreen, bgBlue;
+extern uint8_t fillboxBgRed, fillboxBgGreen, fillboxBgBlue;
+
 
 void demo1()
 {
 
     //TTGO Logo is top
     char s[30];
-    bgRed = 0x40;
-    bgGreen = 0x50;
+    bgRed = 0x30;
+    bgGreen = 0x40;
     bgBlue = 0xd0;
     //clearScreen(bgRed, bgGreen, bgBlue);
     //vTaskDelay(50 / portTICK_PERIOD_MS);
@@ -36,12 +38,12 @@ void demo1()
 
     int count = 0;
     unsigned x = 10;
-    unsigned y = 20;
+    unsigned y = 10;
 
     vTaskDelay(50 / portTICK_PERIOD_MS);
 
 
-    
+
      clearScreen(bgRed, bgGreen, bgBlue);
 
     snprintf(s, 30, "This ");
@@ -84,7 +86,7 @@ void demo1()
     //fillBox(x, y, 10, 10, 0xff,0xff,0xff);
     //fillBox(x, y+10, 10, 10, 0x00,0xff,0x00); 
 
-    y = y + 32;
+   // y = y + 32;
     
 
     int i;
@@ -94,16 +96,26 @@ void demo1()
     }
 
     //fillBox(0, 47, 240, 29, 0x0,0x0,0x0);
-    fillBox(0, 40, 40, 40, 0xff,0x0,0x0);
+    //fillBox(0, 0, 40, 40, 0x50,0x0,0x0);
 
-    while (0)
+    //fillBox(0,0, 40, 40, 0x50,0x0,0x0);)
+   
+fillboxBgRed    = 0x10;
+fillboxBgGreen  = 0x10;
+fillboxBgBlue   = 0x10;
+
+    fillBox(0, HEIGHTY-45, 240, 40, fillboxBgRed, fillboxBgGreen, fillboxBgBlue);
+
+    while (1)
     {
+        int h = 30;
         snprintf(s, 30, "%d", count);
-        displayStr(s, x, y, 0xff, 0xff, 0xff, 64);
+        displayStr(s, 10, y, 0xff, 0xff, 0xff, 64);
         lastValue = currentValue;
         currentValue = lastValue + lastValue * 2161 + esp_timer_get_time() * 2267;
-        data[headPtr%240] = (uint8_t) ( currentValue % (uint64_t)20 );
-        fillBox2(0, 50, 240, 20, 0xff,0x80,0xff,data, headPtr);
+        //data[headPtr%240] = (uint8_t) ( currentValue % (uint64_t)20 );
+        data[headPtr%240] = (uint8_t) ( count % h );
+        fillBox2(0,HEIGHTY-40, 240, 30, 0xff,0xff,0x0,data, headPtr);
         headPtr = (headPtr + 1 ) %240;
         
         vTaskDelay(50 / portTICK_PERIOD_MS);
